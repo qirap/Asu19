@@ -7,10 +7,12 @@ namespace Asu19.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        //private  ApplicationContext db;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger/*, ApplicationContext db*/)
         {
             _logger = logger;
+            //this.db = db;
         }
         [Route("/")]
         public IActionResult Index()

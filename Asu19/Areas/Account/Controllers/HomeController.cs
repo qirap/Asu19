@@ -1,11 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Asu19.Models;
+using Microsoft.AspNetCore.Hosting.Builder;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Asu19.Areas.Account.Controllers
 {
     [Area("Account")]
     public class HomeController : Controller
     {
-        [Route("/personal")]
+        /*private ApplicationContext db;
+        public HomeController(ApplicationContext db)
+        {
+            this.db = db;
+        }*/
+
+        [Route("/profile")]
         public IActionResult Index()
         {
             return View();
