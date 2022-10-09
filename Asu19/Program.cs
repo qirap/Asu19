@@ -1,4 +1,4 @@
-using Asu19.Models;
+using Asu19.Database;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-//builder.Services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(connectionString));
+builder.Services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(connectionString));
 
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>

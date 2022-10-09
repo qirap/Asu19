@@ -1,5 +1,7 @@
-﻿using Asu19.Models;
+﻿using Asu19.Database;
+using Asu19.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace Asu19.Controllers
@@ -7,17 +9,17 @@ namespace Asu19.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        //private  ApplicationContext db;
+        private ApplicationContext db;
 
-        public HomeController(ILogger<HomeController> logger/*, ApplicationContext db*/)
+        public HomeController(ILogger<HomeController> logger, ApplicationContext db)
         {
             _logger = logger;
-            //this.db = db;
+            this.db = db;
         }
         [Route("/")]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            return View(await db.Users.ToListAsync());
         }
 
         public IActionResult Privacy()

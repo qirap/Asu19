@@ -1,7 +1,12 @@
-﻿@{
+﻿@model IEnumerable<Asu19.Database.Users>
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
     <h1>HomePage</h1>
+    @foreach (var user in Model)
+    {
+        <h2>@user.FirstName @user.LastName</h2>
+    }
 </div>
