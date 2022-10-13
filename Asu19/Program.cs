@@ -9,6 +9,7 @@ string connectionString = builder.Configuration.GetConnectionString("DefaultConn
 builder.Services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(connectionString));
 
 builder.Services.AddAuthorization();
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
 {
     options.LoginPath = "/login";

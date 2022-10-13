@@ -1,7 +1,29 @@
 ﻿@{
-    ViewData["Title"] = "Login Page";
+	ViewData["Title"] = "Login Page";
 }
 
-<div class="text-center">
-    <h1>LoginPage</h1>
-</div>
+<section class="login-page">
+	<div class="container">
+		<div class="align-content-center">
+			@if (User.Identity.IsAuthenticated)
+			{
+				<h1>Hello, @User.Claims.ElementAt(1).Value</h1>
+				<a asp-area="Account" asp-controller="Home" asp-action="Logout">Logout</a>
+			}
+			else
+			{
+				<form method="post" asp-area="Account" asp-controller="Home" asp-action="Login">
+					<p>
+						<label>Login</label> <br />
+						<input name="Login" />
+					</p>
+					<p>
+						<label>Password</label><br />
+						<input name="Password" type="password" />
+					</p>
+					<input type="submit" value="Login" />
+				</form>
+			}
+		</div>
+	</div>
+</section>

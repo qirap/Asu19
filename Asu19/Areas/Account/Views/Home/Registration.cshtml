@@ -2,6 +2,40 @@
     ViewData["Title"] = "Register Page";
 }
 
-<div class="text-center">
-    <h1>RegPage</h1>
-</div>
+<section class="login-page">
+	<div class="container">
+		<div class="align-content-center">
+			@if (User.Identity.IsAuthenticated)
+			{
+				<h1>Hello, @User.Claims.ElementAt(1).Value</h1>
+				<a asp-area="Account" asp-controller="Home" asp-action="Logout">Logout</a>
+			}
+			else
+			{
+				<form method="post" asp-area="Account" asp-controller="Home" asp-action="Registration">
+					<p>
+						<label>Login</label> <br />
+						<input name="Login" />
+					</p>
+					<p>
+						<label>Password</label><br />
+						<input name="Password" type="password" />
+					</p>
+					<p>
+						<label>First Name</label><br />
+						<input name="FirstName" />
+					</p>
+					<p>
+						<label>Last Name</label><br />
+						<input name="LastName" />
+					</p>
+					<p>
+						<label>Address</label><br />
+						<input name="Address" />
+					</p>
+					<input type="submit" value="Registration" />
+				</form>
+			}
+		</div>
+	</div>
+</section>
