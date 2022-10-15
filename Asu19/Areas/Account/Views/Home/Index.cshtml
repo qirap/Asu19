@@ -1,7 +1,16 @@
-﻿@{
+﻿@model IEnumerable<Asu19.Areas.Account.Models.UserCarInfo>
+@{
     ViewData["Title"] = "Personal Page";
 }
 
 <div class="text-center">
-    <h1>PersonalPage</h1>
+    <h1>Здравствуйте, @Model.FirstOrDefault().FirstName</h1>
+    <h2>Список ваших авто</h2>
+    <ul class="list-group">
+        @foreach (var item in Model)
+        {
+            <li class="list-group-item">@item.Car</li>
+        }
+        <li class="list-group-item active" aria-current="true">Добавить авто</li>
+    </ul>
 </div>

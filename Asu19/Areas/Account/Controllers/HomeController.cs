@@ -1,9 +1,14 @@
 ﻿using Asu19.Areas.Account.Models;
+using Asu19.Areas.Account.MyResult;
 using Asu19.Database;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting.Builder;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Security.Claims;
 
 namespace Asu19.Areas.Account.Controllers
@@ -18,9 +23,21 @@ namespace Asu19.Areas.Account.Controllers
         }
 
         [Route("/profile")]
-        public IActionResult Index()
+        [Authorize]
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var userCarInfo = from userCar in db.UserCar
+                              join users in db.Users on userCar.UserId equals users.Id
+                              join cars in db.Cars on userCar.CarId equals cars.Id
+                              where userCar.UserId == Convert.ToInt32(User.Claims.FirstOrDefault().Value)
+                              select new UserCarInfo
+                              {
+                                  FirstName = users.FirstName,
+                                  LastName = users.LastName,
+                                  Address = users.Address,
+                                  Car = cars.Brand + " " + cars.Model,
+                              };
+            return View(await userCarInfo.ToListAsync());
         }
 
         [HttpGet]
@@ -34,6 +51,33 @@ namespace Asu19.Areas.Account.Controllers
         [Route("/login")]
         public async Task<IActionResult> Login([FromForm] UserAuthInfo userAuthInfo)
         {
+
+            if (userAuthInfo.Login?.Length < 4 || userAuthInfo.Login?.Length > 20)
+            {
+                ModelState.AddModelError("Login", "Длина логина должна быть от 4 до 20");
+            }
+            if (userAuthInfo.Password?.Length < 4 || userAuthInfo.Password?.Length > 20)
+            {
+                ModelState.AddModelError("Password", "Длина пароля должна быть от 4 до 20");
+            }
+
+            string errorMessages = "";
+
+            if (!ModelState.IsValid)
+            {
+                foreach (var item in ModelState)
+                {
+                    if (item.Value.ValidationState == ModelValidationState.Invalid)
+                    {
+                        foreach (var error in item.Value.Errors)
+                        {
+                            errorMessages = $"{errorMessages}{error.ErrorMessage};";
+                        }
+                    }
+                }
+                return new HtmlResult(errorMessages);
+            }
+
             Users? user = db.Users.FirstOrDefault(u => u.Login == userAuthInfo.Login && u.Password == userAuthInfo.Password);
 
             if (user == null)
@@ -65,6 +109,32 @@ namespace Asu19.Areas.Account.Controllers
         [Route("/registration")]
         public async Task<IActionResult> Registration([FromForm] UserRegInfo userRegInfo)
         {
+            if (userRegInfo.Login?.Length < 4 || userRegInfo.Login?.Length > 20)
+            {
+                ModelState.AddModelError("Login", "Длина логина должна быть от 4 до 20");
+            }
+            if (userRegInfo.Password?.Length < 4 || userRegInfo.Password?.Length > 20)
+            {
+                ModelState.AddModelError("Password", "Длина пароля должна быть от 4 до 20");
+            }
+
+            string errorMessages = "";
+
+            if (!ModelState.IsValid)
+            {
+                foreach (var item in ModelState)
+                {
+                    if (item.Value.ValidationState == ModelValidationState.Invalid)
+                    {
+                        foreach (var error in item.Value.Errors)
+                        {
+                            errorMessages = $"{errorMessages}{error.ErrorMessage};";
+                        }
+                    }
+                }
+                return new HtmlResult(errorMessages);
+            }
+
             Users? user = db.Users.FirstOrDefault(u => u.Login == userRegInfo.Login);
 
             if (user != null)
