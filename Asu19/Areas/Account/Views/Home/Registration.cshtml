@@ -3,39 +3,68 @@
 }
 
 <section class="login-page">
-	<div class="container">
-		<div class="align-content-center">
-			@if (User.Identity.IsAuthenticated)
-			{
-				<h1>Hello, @User.Claims.ElementAt(1).Value</h1>
-				<a asp-area="Account" asp-controller="Home" asp-action="Logout">Logout</a>
-			}
-			else
-			{
-				<form method="post" asp-area="Account" asp-controller="Home" asp-action="Registration">
-					<p>
-						<label>Login</label> <br />
-						<input name="Login" />
-					</p>
-					<p>
-						<label>Password</label><br />
-						<input name="Password" type="password" />
-					</p>
-					<p>
-						<label>First Name</label><br />
-						<input name="FirstName" />
-					</p>
-					<p>
-						<label>Last Name</label><br />
-						<input name="LastName" />
-					</p>
-					<p>
-						<label>Address</label><br />
-						<input name="Address" />
-					</p>
-					<input type="submit" value="Registration" />
-				</form>
-			}
-		</div>
-	</div>
+    <div class="container">
+        <div class="align-content-center">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <h1>Hello, @User.Claims.ElementAt(1).Value</h1>
+                <a asp-area="Account" asp-controller="Home" asp-action="Logout">Logout</a>
+            }
+            else
+            {
+                <section class="pb-4">
+
+
+                    <div class="row d-flex justify-content-center mt-4">
+                        <div class="col-12 col-md-8 col-lg-6 col-xl-6">
+                            <div class="card bg-dark text-white" style="border-radius: 1rem; ">
+                                <div class="card-body p-5 text-center">
+
+                                    <div class="mb-md-5 mt-md-4 pb-5">
+
+                                        <h2 class="fw-bold mb-2 text-uppercase">Регистрация</h2>
+                                        <p class="text-white-50 mb-5">Пожалуйста введите необходимые данные!</p>
+                                        <form method="post" asp-area="Account" asp-controller="Home" asp-action="Registration">
+                                            <div class="form-outline form-white mb-4">
+                                                <input name="Login" type="login" id="typeLoginX" class="form-control form-control-lg">
+                                                <label class="form-label" for="typeLoginX" style="margin-left: 0px;">Логин</label>
+                                                <div class="form-notch"><div class="form-notch-leading" style="width: 9px;"></div><div class="form-notch-middle" style="width: 40px;"></div><div class="form-notch-trailing"></div></div>
+                                            </div>
+
+                                            <div class="form-outline form-white mb-4">
+                                                <input name="Password" type="password" id="typePasswordX" class="form-control form-control-lg">
+                                                <label class="form-label" for="typePasswordX" style="margin-left: 0px;">Пароль</label>
+                                                <div class="form-notch"><div class="form-notch-leading" style="width: 9px;"></div><div class="form-notch-middle" style="width: 64px;"></div><div class="form-notch-trailing"></div></div>
+                                            </div>
+
+                                            <div class="form-outline form-white mb-4">
+                                                <input name="FirstName" type="firstname" id="typeFirstNameX" class="form-control form-control-lg">
+                                                <label class="form-label" for="typeFirstNameX" style="margin-left: 0px;">Имя</label>
+                                                <div class="form-notch"><div class="form-notch-leading" style="width: 9px;"></div><div class="form-notch-middle" style="width: 64px;"></div><div class="form-notch-trailing"></div></div>
+                                            </div>
+
+                                            <div class="form-outline form-white mb-4">
+                                                <input name="LastName" type="lastname" id="typeLastNameX" class="form-control form-control-lg">
+                                                <label class="form-label" for="typeLastNameX" style="margin-left: 0px;">Фамилия</label>
+                                                <div class="form-notch"><div class="form-notch-leading" style="width: 9px;"></div><div class="form-notch-middle" style="width: 64px;"></div><div class="form-notch-trailing"></div></div>
+                                            </div>
+
+                                            <div class="form-outline form-white mb-4">
+                                                <input name="Address" type="address" id="typeAddressX" class="form-control form-control-lg">
+                                                <label class="form-label" for="typeAddressX" style="margin-left: 0px;">Адрес</label>
+                                                <div class="form-notch"><div class="form-notch-leading" style="width: 9px;"></div><div class="form-notch-middle" style="width: 64px;"></div><div class="form-notch-trailing"></div></div>
+                                            </div>
+
+                                            <button class="btn btn-outline-light btn-lg px-5" type="submit">Зарегестрироваться</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+            }
+        </div>
+    </div>
 </section>
