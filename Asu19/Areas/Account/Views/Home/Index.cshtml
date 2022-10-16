@@ -4,7 +4,7 @@
 }
 
 <div class="text-center">
-    <h1>Здравствуйте, @Model.FirstOrDefault().FirstName</h1>
+    <h1>Здравствуйте, @User.Claims.ElementAt(1).Value</h1>
     <h2>Список ваших авто</h2>
     <ul class="list-group">
         @foreach (var item in Model)

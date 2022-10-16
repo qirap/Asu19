@@ -29,7 +29,8 @@ create table employees
     id SERIAL PRIMARY KEY,
     first_name varchar(32),
     last_name varchar(32),
-    address varchar(32)
+    address varchar(32),
+    year date
 );
 
 create table services

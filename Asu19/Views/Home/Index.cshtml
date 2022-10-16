@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Asu19.Database.EmployeeService>
+﻿@model IEnumerable<Asu19.Database.Services>
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -7,6 +7,6 @@
     <h1>HomePage</h1>
     @foreach (var item in Model)
     {
-        <h2>@item.EmployeeId @item.ServiceId</h2>
+        <h2>@item.Name - @item.Price рублей</h2>
     }
 </div>

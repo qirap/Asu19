@@ -19,7 +19,7 @@ namespace Asu19.Controllers
         [Route("/")]
         public async Task<IActionResult> Index()
         {
-            return View(await db.EmployeeService.ToListAsync());
+            return View(await db.Services.ToListAsync());
         }
 
         public IActionResult Privacy()

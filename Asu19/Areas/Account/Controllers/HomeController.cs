@@ -27,14 +27,10 @@ namespace Asu19.Areas.Account.Controllers
         public async Task<IActionResult> Index()
         {
             var userCarInfo = from userCar in db.UserCar
-                              join users in db.Users on userCar.UserId equals users.Id
                               join cars in db.Cars on userCar.CarId equals cars.Id
                               where userCar.UserId == Convert.ToInt32(User.Claims.FirstOrDefault().Value)
                               select new UserCarInfo
                               {
-                                  FirstName = users.FirstName,
-                                  LastName = users.LastName,
-                                  Address = users.Address,
                                   Car = cars.Brand + " " + cars.Model,
                               };
             return View(await userCarInfo.ToListAsync());
@@ -54,11 +50,11 @@ namespace Asu19.Areas.Account.Controllers
 
             if (userAuthInfo.Login?.Length < 4 || userAuthInfo.Login?.Length > 20)
             {
-                ModelState.AddModelError("Login", "Длина логина должна быть от 4 до 20");
+                ModelState.AddModelError("Login", "Длина логина должна быть от 4 до 20 символов");
             }
             if (userAuthInfo.Password?.Length < 4 || userAuthInfo.Password?.Length > 20)
             {
-                ModelState.AddModelError("Password", "Длина пароля должна быть от 4 до 20");
+                ModelState.AddModelError("Password", "Длина пароля должна быть от 4 до 20 символов");
             }
 
             string errorMessages = "";
@@ -111,11 +107,11 @@ namespace Asu19.Areas.Account.Controllers
         {
             if (userRegInfo.Login?.Length < 4 || userRegInfo.Login?.Length > 20)
             {
-                ModelState.AddModelError("Login", "Длина логина должна быть от 4 до 20");
+                ModelState.AddModelError("Login", "Длина логина должна быть от 4 до 20 символов");
             }
             if (userRegInfo.Password?.Length < 4 || userRegInfo.Password?.Length > 20)
             {
-                ModelState.AddModelError("Password", "Длина пароля должна быть от 4 до 20");
+                ModelState.AddModelError("Password", "Длина пароля должна быть от 4 до 20 символов");
             }
 
             string errorMessages = "";
@@ -140,7 +136,7 @@ namespace Asu19.Areas.Account.Controllers
             if (user != null)
                 return new UnauthorizedResult();
 
-            db.Users.Add(new Users
+            user = new Users
             {
                 Id = db.Users.Max(u => u.Id) + 1,
                 Login = userRegInfo.Login,
@@ -149,7 +145,9 @@ namespace Asu19.Areas.Account.Controllers
                 LastName = userRegInfo.LastName,
                 Address = userRegInfo.Address,
                 Role = "user"
-            });
+            };
+
+            db.Users.Add(user);
 
             await db.SaveChangesAsync();
 
@@ -172,7 +170,14 @@ namespace Asu19.Areas.Account.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return new RedirectResult("/login");
+            return new RedirectResult("/");
         }
+
+        /*[HttpPost]
+        [Route("/addcar")]
+        public async Task<IActionResult> AddCar()
+        {
+            
+        }*/
     }
 }
