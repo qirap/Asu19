@@ -2,7 +2,7 @@
 
 namespace Asu19.Areas.Account.Models
 {
-    public class UserRegInfo
+    public class UserRegInfo : IUserAuthInfo
     {
         [Required]
         public string? Login { get; set; }

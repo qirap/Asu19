@@ -9,8 +9,8 @@
     <ul class="list-group">
         @foreach (var item in Model)
         {
-            <li class="list-group-item">@item.Car</li>
+            <li class="list-group-item">@item.Model @item.Brand</li>
         }
-        <li class="list-group-item active" aria-current="true">Добавить авто</li>
+        <li class="list-group-item active" aria-current="true"><a href="/addcar">Добавить авто</a></li>
     </ul>
 </div>

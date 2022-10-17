@@ -32,5 +32,17 @@ namespace Asu19.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        [Route("/price")]
+        public IActionResult Price()
+        {
+            return View();
+        }
+
+        [Route("/about")]
+        public IActionResult About()
+        {
+            return View();
+        }
     }
 }

@@ -31,7 +31,8 @@ namespace Asu19.Areas.Account.Controllers
                               where userCar.UserId == Convert.ToInt32(User.Claims.FirstOrDefault().Value)
                               select new UserCarInfo
                               {
-                                  Car = cars.Brand + " " + cars.Model,
+                                  Brand = cars.Brand,
+                                  Model = cars.Model,
                               };
             return View(await userCarInfo.ToListAsync());
         }
@@ -45,42 +46,21 @@ namespace Asu19.Areas.Account.Controllers
 
         [HttpPost]
         [Route("/login")]
-        public async Task<IActionResult> Login([FromForm] UserAuthInfo userAuthInfo)
+        public async Task<IActionResult> Login([FromForm] UserLogInfo userLogInfo)
         {
 
-            if (userAuthInfo.Login?.Length < 4 || userAuthInfo.Login?.Length > 20)
-            {
-                ModelState.AddModelError("Login", "Длина логина должна быть от 4 до 20 символов");
-            }
-            if (userAuthInfo.Password?.Length < 4 || userAuthInfo.Password?.Length > 20)
-            {
-                ModelState.AddModelError("Password", "Длина пароля должна быть от 4 до 20 символов");
-            }
-
-            string errorMessages = "";
+            AddValidationRule(userLogInfo);
 
             if (!ModelState.IsValid)
-            {
-                foreach (var item in ModelState)
-                {
-                    if (item.Value.ValidationState == ModelValidationState.Invalid)
-                    {
-                        foreach (var error in item.Value.Errors)
-                        {
-                            errorMessages = $"{errorMessages}{error.ErrorMessage};";
-                        }
-                    }
-                }
-                return new HtmlResult(errorMessages);
-            }
+                return new HtmlResult(AuthValidation(userLogInfo));
 
-            Users? user = db.Users.FirstOrDefault(u => u.Login == userAuthInfo.Login && u.Password == userAuthInfo.Password);
+            Users? user = db.Users.FirstOrDefault(u => u.Login == userLogInfo.Login && u.Password == userLogInfo.Password);
 
             if (user == null)
                 return new UnauthorizedResult();
 
             var claims = new List<Claim>
-            { 
+            {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.FirstName + " " + user.LastName),
                 new Claim(ClaimTypes.Role, user.Role),
@@ -105,31 +85,10 @@ namespace Asu19.Areas.Account.Controllers
         [Route("/registration")]
         public async Task<IActionResult> Registration([FromForm] UserRegInfo userRegInfo)
         {
-            if (userRegInfo.Login?.Length < 4 || userRegInfo.Login?.Length > 20)
-            {
-                ModelState.AddModelError("Login", "Длина логина должна быть от 4 до 20 символов");
-            }
-            if (userRegInfo.Password?.Length < 4 || userRegInfo.Password?.Length > 20)
-            {
-                ModelState.AddModelError("Password", "Длина пароля должна быть от 4 до 20 символов");
-            }
-
-            string errorMessages = "";
+            AddValidationRule(userRegInfo);
 
             if (!ModelState.IsValid)
-            {
-                foreach (var item in ModelState)
-                {
-                    if (item.Value.ValidationState == ModelValidationState.Invalid)
-                    {
-                        foreach (var error in item.Value.Errors)
-                        {
-                            errorMessages = $"{errorMessages}{error.ErrorMessage};";
-                        }
-                    }
-                }
-                return new HtmlResult(errorMessages);
-            }
+                return new HtmlResult(AuthValidation(userRegInfo));
 
             Users? user = db.Users.FirstOrDefault(u => u.Login == userRegInfo.Login);
 
@@ -173,11 +132,47 @@ namespace Asu19.Areas.Account.Controllers
             return new RedirectResult("/");
         }
 
-        /*[HttpPost]
+        [HttpGet]
+        [Authorize]
         [Route("/addcar")]
-        public async Task<IActionResult> AddCar()
+        public IActionResult AddCar()
         {
-            
-        }*/
+            return View();
+        }
+
+        [HttpPost]
+        [Route("/addcar")]
+        public async Task<IActionResult> AddCar([FromForm] UserCarInfo userCarInfo)
+        {
+            return new HtmlResult(userCarInfo.Brand + " " + userCarInfo.Model);
+        }
+
+        public void AddValidationRule(IUserAuthInfo userAuthInfo)
+        {
+            foreach (var item in userAuthInfo.GetType().GetProperties())
+            {
+                if (item.GetValue(userAuthInfo, null)?.ToString()?.Length < 4)
+                {
+                    ModelState.AddModelError(item.Name, $"Длина поля {item.Name} должна быть от 4 до 20 символов");
+                }
+            }
+        }
+
+        public string AuthValidation(IUserAuthInfo userAuthInfo)
+        {
+            string errorMessages = "";
+
+            foreach (var item in ModelState)
+            {
+                if (item.Value.ValidationState == ModelValidationState.Invalid)
+                {
+                    foreach (var error in item.Value.Errors)
+                    {
+                        errorMessages = $"{errorMessages}{error.ErrorMessage};";
+                    }
+                }
+            }
+            return errorMessages;
+        }
     }
 }
