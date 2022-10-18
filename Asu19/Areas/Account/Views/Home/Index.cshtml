@@ -9,8 +9,23 @@
     <ul class="list-group">
         @foreach (var item in Model)
         {
-            <li class="list-group-item">@item.Model @item.Brand</li>
+            <li id="@($"{item.Brand}_{item.Model}")" class="list-group-item w-25">@item.Brand @item.Model<button onclick="remove('@item.Brand', '@item.Model')" type="button" class="btn btn-danger">Delete</button></li>
         }
         <li class="list-group-item active" aria-current="true"><a href="/addcar">Добавить авто</a></li>
     </ul>
 </div>
+
+<script>
+    async function remove(brand, model) {
+        const response = await fetch("/delcar", {
+            method: "POST",
+            headers: { "Accept": "application/json", "Content-Type": "application/json" },
+            body: JSON.stringify({
+                Brand : brand,
+                Model : model
+            })
+        });
+        if (response.ok)
+            document.getElementById(brand + "_" + model).style.display = "none";
+    }
+</script>

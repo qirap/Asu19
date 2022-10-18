@@ -52,7 +52,7 @@ namespace Asu19.Areas.Account.Controllers
             AddValidationRule(userLogInfo);
 
             if (!ModelState.IsValid)
-                return new HtmlResult(AuthValidation(userLogInfo));
+                return new HtmlResult(AuthValidation(userLogInfo), "/login");
 
             Users? user = db.Users.FirstOrDefault(u => u.Login == userLogInfo.Login && u.Password == userLogInfo.Password);
 
@@ -88,7 +88,7 @@ namespace Asu19.Areas.Account.Controllers
             AddValidationRule(userRegInfo);
 
             if (!ModelState.IsValid)
-                return new HtmlResult(AuthValidation(userRegInfo));
+                return new HtmlResult(AuthValidation(userRegInfo), "/registration");
 
             Users? user = db.Users.FirstOrDefault(u => u.Login == userRegInfo.Login);
 
@@ -144,7 +144,39 @@ namespace Asu19.Areas.Account.Controllers
         [Route("/addcar")]
         public async Task<IActionResult> AddCar([FromForm] UserCarInfo userCarInfo)
         {
-            return new HtmlResult(userCarInfo.Brand + " " + userCarInfo.Model);
+            if (!ModelState.IsValid)
+                return new HtmlResult("Неверный ввод", "/addcar");
+
+            Cars? car = db.Cars.FirstOrDefault(c => c.Brand == userCarInfo.Brand.Trim() && c.Model == userCarInfo.Model.Trim());
+
+            if (car != null)
+            {
+                db.UserCar.Add(new UserCar
+                {
+                    Id = db.UserCar.Max(uc => uc.Id) + 1,
+                    UserId = Convert.ToInt32(User.Claims.ElementAt(0).Value),
+                    CarId = car.Id,
+                });
+
+                await db.SaveChangesAsync();
+            }
+
+            return new RedirectResult("/profile");
+        }
+
+        [HttpPost]
+        [Route("/delcar")]
+        public async Task DelCar([FromBody] UserCarInfo userCarInfo)
+        {
+            Console.WriteLine($"\n\n*** {userCarInfo.Brand} ***\n\n");
+
+            Cars? car = db.Cars.FirstOrDefault(c => c.Brand == userCarInfo.Brand && c.Model == userCarInfo.Model);
+
+            UserCar? userCar = db.UserCar.FirstOrDefault(uc => uc.UserId == Convert.ToInt32(User.Claims.ElementAt(0).Value) && uc.CarId == car.Id);
+
+            db.UserCar.Remove(userCar);
+
+            await db.SaveChangesAsync();
         }
 
         public void AddValidationRule(IUserAuthInfo userAuthInfo)

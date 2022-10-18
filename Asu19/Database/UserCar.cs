@@ -15,8 +15,5 @@ namespace Asu19.Database
 
         [Column("car_id")]
         public int CarId { get; set; }
-
-        [Column("year")]
-        public string? Year { get; set; }
     }
 }

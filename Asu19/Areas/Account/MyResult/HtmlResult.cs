@@ -5,9 +5,11 @@ namespace Asu19.Areas.Account.MyResult
     public class HtmlResult : IActionResult
     {
         string htmlCode;
-        public HtmlResult(string html)
+        string redirect;
+        public HtmlResult(string html, string redirect)
         {
             htmlCode = "<h2>" + string.Join("</h2><h2>", html.Split(";")) + "</h2>";
+            this.redirect = redirect;
         }
         public async Task ExecuteResultAsync(ActionContext context)
         {
@@ -21,7 +23,7 @@ namespace Asu19.Areas.Account.MyResult
                     <body>
                         <h1>Список ошибок</h1>
                         {htmlCode}
-                        <a href=""/login"">Вернуться к аутентификации</a>
+                        <a href=""{redirect}"">Вернуться к заполнению формы</a>
                     </body>
                 </html>";
             await context.HttpContext.Response.WriteAsync(fullHtmlCode);
