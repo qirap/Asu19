@@ -26,6 +26,7 @@
                 @if (User.Identity.IsAuthenticated)
                 {
                     <div class="text-end">
+                        <h6>@User.Claims.ElementAt(1).Value</h6>
                         <button type="button" onclick="document.location='/profile'" class="btn btn-outline-light me-2">Профиль</button>
                         <button type="button" onclick="document.location='/logout'" class="btn btn-warning">Выйти</button>
                     </div>
