@@ -25,7 +25,7 @@ namespace Asu19.Areas.Account.Controllers
 
         [Route("/profile")]
         [Authorize]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Profile()
         {
             var userCarInfo = from userCar in db.UserCar
                               join cars in db.Cars on userCar.CarId equals cars.Id
@@ -35,6 +35,8 @@ namespace Asu19.Areas.Account.Controllers
                                   Brand = cars.Brand,
                                   Model = cars.Model,
                               };
+            ViewBag.Requests = db.Requests;
+
             return View(await userCarInfo.ToListAsync());
         }
 
@@ -201,9 +203,24 @@ namespace Asu19.Areas.Account.Controllers
 
         [HttpPost]
         [Route("/addrequest")]
-        public IActionResult AddRequest([FromForm] string? car, int? serviceId)
+        public async Task<IActionResult> AddRequest([FromForm] string? car, int? serviceId)
         {
-            //todo datetime
+            string brand = car.Split("_")[0];
+            string model = car.Split("_")[1];
+
+            db.Requests.Add(new Requests
+            {
+                Id = db.Requests.Max(r => r.Id) + 1 ?? 1,
+                UserId = Convert.ToInt32(User.Claims.FirstOrDefault().Value),
+                CarId = db.Cars.Where(c => c.Brand == brand && c.Model == model).FirstOrDefault().Id,
+                ServiceId = serviceId,
+                EmployeeId = null,
+                StartTime = DateTime.Now,
+                Status = "Обработка",
+                EndTime = null,
+            });
+            await db.SaveChangesAsync();
+
             return new HtmlResult(car + " " + serviceId.ToString(), "/profile");
         }
 

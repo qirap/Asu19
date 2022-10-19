@@ -22,11 +22,6 @@ namespace Asu19.Controllers
             return View(await db.Services.ToListAsync());
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
