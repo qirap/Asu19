@@ -17,6 +17,7 @@ namespace Asu19.Areas.Account.Controllers
     public class HomeController : Controller
     {
         private ApplicationContext db;
+
         public HomeController(ApplicationContext db)
         {
             this.db = db;
@@ -177,6 +178,33 @@ namespace Asu19.Areas.Account.Controllers
             db.UserCar.Remove(userCar);
 
             await db.SaveChangesAsync();
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("/addrequest")]
+        public async Task<IActionResult> AddRequest()
+        {
+            ViewBag.Services = db.Services;
+
+            var userCarInfo = from userCar in db.UserCar
+                              join cars in db.Cars on userCar.CarId equals cars.Id
+                              where userCar.UserId == Convert.ToInt32(User.Claims.FirstOrDefault().Value)
+                              select new UserCarInfo
+                              {
+                                  Brand = cars.Brand,
+                                  Model = cars.Model,
+                              };
+
+            return View(await userCarInfo.ToListAsync());
+        }
+
+        [HttpPost]
+        [Route("/addrequest")]
+        public IActionResult AddRequest([FromForm] string? car, int? serviceId)
+        {
+            //todo datetime
+            return new HtmlResult(car + " " + serviceId.ToString(), "/profile");
         }
 
         public void AddValidationRule(IUserAuthInfo userAuthInfo)

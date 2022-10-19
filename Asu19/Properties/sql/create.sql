@@ -20,8 +20,7 @@ create table user_car
 (
     id SERIAL PRIMARY KEY,
     user_id int references users (id),
-    car_id int references cars (id),
-    year date
+    car_id int references cars (id)
 );
 
 create table employees
