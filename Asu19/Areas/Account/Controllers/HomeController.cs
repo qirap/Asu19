@@ -9,7 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Data;
 using System.Security.Claims;
+using System.Security.Policy;
 
 namespace Asu19.Areas.Account.Controllers
 {
@@ -126,6 +128,38 @@ namespace Asu19.Areas.Account.Controllers
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
 
             return new RedirectResult("/");
+        }
+
+        [Authorize]
+        [Route("/requests/{id?}")]
+        public async Task<IActionResult> Requests(int? id)
+        {
+            var userRequests = from requests in db.Requests
+                               join users in db.Users on requests.UserId equals users.Id
+                               join cars in db.Cars on requests.CarId equals cars.Id
+                               join services in db.Services on requests.ServiceId equals services.Id
+                               join employees in db.Employees on requests.EmployeeId equals employees.Id into em_join
+                               from e in em_join.DefaultIfEmpty()
+                               select new UserRequestInfo
+                               {
+                                   Id = requests.Id,
+                                   UserId = users.Id,
+                                   UserName = users.FirstName + " " + users.LastName,
+                                   Car = cars.Brand + " " + cars.Model,
+                                   Service = services.Name,
+                                   Price = services.Price.ToString(),
+                                   Employee = e == null ? "None" : e.FirstName + " " + e.LastName,
+                                   Status = requests.Status,
+                                   StartTime = requests.StartTime,
+                                   EndTime = requests.EndTime ?? DateTime.Now,
+                               };
+
+            if (User.Claims.ElementAt(2).Value == "user")
+            {
+                userRequests = userRequests.Where(ur => ur.UserId == Convert.ToInt32(User.Claims.FirstOrDefault().Value));
+            }
+
+            return View(await userRequests.ToListAsync());
         }
 
         [Route("/logout")]

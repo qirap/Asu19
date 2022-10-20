@@ -41,7 +41,7 @@
                         <ul class="list-group">
                             @foreach (var item in Model)
                             {
-                                <li id="@($"{item.Brand}_{item.Model}")" class="list-group-item w-100">@item.Brand @item.Model<button onclick="remove('@item.Brand', '@item.Model')" type="button" class="btn btn-danger">Delete</button></li>
+                                <li id="@($"{item.Brand}_{item.Model}")" class="list-group-item w-100">@item.Brand @item.Model<button onclick="remove('@item.Brand', '@item.Model')" type="button" class="btn btn-danger justify-content-end">Delete</button></li>
                             }
                         </ul>
                         <a class="btn gradient-custom mt-3 btn-lg" href="/addcar" role="button">Добавить авто</a>
@@ -63,14 +63,22 @@
                                 }
                             </select>
 
-                            <ul class="list-group d-flex mt-3">
-                                @foreach (var item in Model)
+                            <ul class="list-group mt-3">
+                                @foreach (var item in ViewBag.Requests)
                                 {
-                                    <li id="@($"{item.Brand}_{item.Model}")" class="list-group-item w-100">@item.Brand @item.Model<button onclick="remove('@item.Brand', '@item.Model')" type="button" class="btn btn-danger">Delete</button></li>
+                                    <li class="list-group-item">@item.Status @item.StartTime</li>
                                 }
                             </ul>
-                            <a class="btn gradient-custom mt-3 btn-lg" href="/addrequest" role="button">Создать заявку</a>
-                            <input name="__RequestVerificationToken" type="hidden" value="CfDJ8BQ6gXmbdFxPslUtcF_q_Jol4uS0-GTw4qDDFo4ZXaYw-WXcSgm-BFq6UsSkRpMvixYR-qm_4Oo9o68HOMQ6ZtGC8WS-d68kbS_qNEcxo3RUlLRCEO4aTmpp8vG93x_ATJXbd87EPVbg_mIvXIpanZekGrTACx3PgNyQ6H1-0p0nmlRg5PqgZOlctlK3Pc8kuA">
+
+                            @if (Model.FirstOrDefault() != null)
+                            {
+                                <a class="btn gradient-custom mt-3 btn-lg" href="/addrequest" role="button">Создать заявку</a>
+                            }
+                            else
+                            {
+                                <a class="btn gradient-custom mt-3 btn-lg" href="/addcar" role="button">Добавить авто</a>
+                            }
+                            
                         </form>
                     </div>
                 </div>

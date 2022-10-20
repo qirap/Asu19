@@ -1,0 +1,29 @@
+﻿@model IEnumerable<Asu19.Areas.Account.Models.UserRequestInfo>
+
+<table class="table">
+<thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Имя</th>
+        <th scope="col">Авто</th>
+        <th scope="col">Услуга</th>
+        <th scope="col">Цена</th>
+        <th scope="col">Работник</th>
+        <th scope="col">Статус</th>
+    </tr>
+</thead>
+<tbody>
+     @foreach (var item in Model)
+     {
+         <tr>
+            <th scope="row">@item.Id</th>
+            <td>@item.UserName</td>
+            <td>@item.Car</td>
+            <td>@item.Service</td>
+            <td>@item.Price</td>
+            <td>@item.Employee</td>
+            <td>@item.Status</td>
+        </tr>
+     }
+</tbody>
+</table>
