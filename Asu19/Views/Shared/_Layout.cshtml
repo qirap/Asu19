@@ -7,35 +7,36 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Asu19.styles.css" asp-append-version="true" />
+    <link rel="shortcut icon" type="image/x-icon" href="~/img/AVTO_AV.png" />
 </head>
-<body class="gradient-custom">
+<body class="background">
 
-    <header class="p-3 bg-dark text-white">
+    <header class="p-3 gradient-custom text-dark">
         <div class="container">
             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
                 <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-                    <!-- <a href="#" class="pull-left"><img src="icons/logo.png"></a> -->
+                    <a href="#" class="pull-left"><img src="~/img/AVTO_AV.png" width="50" height="50"> </a>
                 </a>
 
                 <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                    <li><a href="/" class="nav-link px-2 text-secondary">Главная</a></li>
-                    <li><a href="/price" class="nav-link px-2 text-white">Услуги</a></li>
-                    <li><a href="/about" class="nav-link px-2 text-white">О нас</a></li>
+                    <li><a href="/" class="nav-link px-2 text-dark">Главная</a></li>
+                    <li><a href="/price" class="nav-link px-2 text-dark">Услуги</a></li>
+                    <li><a href="/about" class="nav-link px-2 text-dark">О нас</a></li>
                 </ul>
 
                 @if (User.Identity.IsAuthenticated)
                 {
                     <div class="text-end">
-                        <h6>@User.Claims.ElementAt(1).Value</h6>
-                        <button type="button" onclick="document.location='/profile'" class="btn btn-outline-light me-2">Профиль</button>
-                        <button type="button" onclick="document.location='/logout'" class="btn btn-warning">Выйти</button>
+                        <label class="p-2">@User.Claims.ElementAt(1).Value</label>
+                        <button type="button" onclick="document.location='/profile'" class="btn btn-dark me-2">Профиль</button>
+                        <button type="button" onclick="document.location='/logout'" class="btn btn-dark">Выйти</button>
                     </div>
                 }
                 else
                 {
                     <div class="text-end">
-                        <button type="button" onclick="document.location='/login'" class="btn btn-outline-light me-2">Логин</button>
-                        <button type="button" onclick="document.location='/registration'" class="btn btn-warning">Регистрация</button>
+                        <button type="button" onclick="document.location='/login'" class="btn btn-dark me-2">Логин</button>
+                        <button type="button" onclick="document.location='/registration'" class="btn btn-dark">Регистрация</button>
                     </div>
                 }
             </div>
@@ -44,7 +45,7 @@
 
     @RenderBody()
 
-    <footer class="footer text-white bg-dark">
+    <footer class="footer text-dark gradient-custom">
         <div class="container">
             &copy; 2022 - Autoservice
         </div>
