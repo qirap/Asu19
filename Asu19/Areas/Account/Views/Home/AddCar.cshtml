@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IEnumerable<Asu19.Areas.Account.Models.UserCarInfo>
+@{
     ViewData["Title"] = "Добавить авто";
 }
 
@@ -17,10 +18,10 @@
                                     <div class="mb-md-5 mt-md-2 pb-5">
                                         <h3 class="fw-bold mb-2 text-uppercase">Ваши авто</h3>
                                         <ul class="list-group">
-                                            @*@foreach (var item in Model)
+                                            @foreach (var item in Model)
                                             {
                                                 <li id="@($"{item.Brand}_{item.Model}")" class="list-group-item w-100">@item.Brand @item.Model<button onclick="remove('@item.Brand', '@item.Model')" type="button" class="btn btn-danger justify-content-end">Delete</button></li>
-                                            }*@
+                                            }
                                         </ul>
                                     </div>
 
@@ -48,3 +49,19 @@
         </div>
     </div>
 </section>
+
+
+<script>
+    async function remove(brand, model) {
+        const response = await fetch("/delcar", {
+            method: "POST",
+            headers: { "Accept": "application/json", "Content-Type": "application/json" },
+            body: JSON.stringify({
+                Brand: brand,
+                Model: model
+            })
+        });
+        if (response.ok)
+            document.getElementById(brand + "_" + model).style.display = "none";
+    }
+</script>

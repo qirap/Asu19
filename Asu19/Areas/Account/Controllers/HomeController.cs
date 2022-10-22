@@ -172,9 +172,17 @@ namespace Asu19.Areas.Account.Controllers
         [HttpGet]
         [Authorize]
         [Route("/addcar")]
-        public IActionResult AddCar()
+        public async Task<IActionResult> AddCar()
         {
-            return View();
+            var userCarInfo = from userCar in db.UserCar
+                              join cars in db.Cars on userCar.CarId equals cars.Id
+                              where userCar.UserId == Convert.ToInt32(User.Claims.FirstOrDefault().Value)
+                              select new UserCarInfo
+                              {
+                                  Brand = cars.Brand,
+                                  Model = cars.Model,
+                              };
+            return View(await userCarInfo.ToListAsync());
         }
 
         [HttpPost]
@@ -198,7 +206,7 @@ namespace Asu19.Areas.Account.Controllers
                 await db.SaveChangesAsync();
             }
 
-            return new RedirectResult("/profile");
+            return new RedirectResult("/addcar");
         }
 
         [HttpPost]

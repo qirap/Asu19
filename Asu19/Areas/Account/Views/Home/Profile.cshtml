@@ -3,62 +3,6 @@
     ViewData["Title"] = "Профиль";
 }
 
-@*<div class="container text-center mt-5">
-    <div class="row">
-        <div class="col">
-            <div class="card bg-dark text-white border-custom">
-                <div class="card-body p-5">
-                    <div class="mb-md-5 mt-md-4 pb-5">
-                        <h2 class="fw-bold mb-2 text-uppercase">Ваши авто</h2>
-                        <ul class="list-group">
-                            @foreach (var item in Model)
-                            {
-                                <li id="@($"{item.Brand}_{item.Model}")" class="list-group-item w-100">@item.Brand @item.Model<button onclick="remove('@item.Brand', '@item.Model')" type="button" class="btn btn-danger justify-content-end">Delete</button></li>
-                            }
-                        </ul>
-                        <a class="btn gradient-custom mt-3 btn-lg" href="/addcar" role="button">Добавить авто</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card bg-dark text-white border-custom">
-                <div class="card-body p-5 text-center">
-                    <div class="mb-md-5 mt-md-4 pb-5">
-                        <h2 class="fw-bold mb-2 text-uppercase">Ваши заявки</h2>
-
-                        <form method="post" action="/addrequest">
-                            <select name="car" class="form-select" aria-label="Default select example">
-                                @foreach (var item in Model)
-                                {
-                                    <option value="@($"{item.Brand}_{item.Model}")">@item.Brand @item.Model</option>
-                                }
-                            </select>
-
-                            <ul class="list-group mt-3">
-                                @foreach (var item in ViewBag.Requests)
-                                {
-                                    <li class="list-group-item">@item.Status @item.StartTime</li>
-                                }
-                            </ul>
-
-                            @if (Model.FirstOrDefault() != null)
-                            {
-                                <a class="btn gradient-custom mt-3 btn-lg" href="/addrequest" role="button">Создать заявку</a>
-                            }
-                            else
-                            {
-                                <a class="btn gradient-custom mt-3 btn-lg" href="/addcar" role="button">Добавить авто</a>
-                            }
-
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>*@
-
 <div class="container text-center mt-5 w-50">
     <div class="card bg-dark text-white border-custom">
         <div class="card-body p-5">
@@ -92,18 +36,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    async function remove(brand, model) {
-        const response = await fetch("/delcar", {
-            method: "POST",
-            headers: { "Accept": "application/json", "Content-Type": "application/json" },
-            body: JSON.stringify({
-                Brand: brand,
-                Model: model
-            })
-        });
-        if (response.ok)
-            document.getElementById(brand + "_" + model).style.display = "none";
-    }
-</script>

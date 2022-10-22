@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Asu19.Areas.Account.Models.UserCarInfo>
+﻿@*@model IEnumerable<Asu19.Areas.Account.Models.UserRequestInfo>*@
 @{
 	ViewData["Title"] = "Создать заявку";
 }
@@ -22,10 +22,10 @@
 									<form method="post" asp-area="Account" asp-controller="Home" asp-action="AddRequest">
 										<div class="form-outline form-white mb-4">
 											<select name="car" class="form-select" aria-label="Default select example">
-												@foreach (var item in Model)
+												@*@foreach (var item in Model)
 												{
 													<option value="@($"{item.Brand}_{item.Model}")">@item.Brand @item.Model</option>
-												}
+												}*@
 											</select>
 										</div>
 
