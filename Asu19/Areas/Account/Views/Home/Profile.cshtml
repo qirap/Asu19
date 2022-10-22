@@ -1,12 +1,12 @@
 ﻿@model IEnumerable<Asu19.Areas.Account.Models.UserCarInfo>
 @{
-    ViewData["Title"] = "Personal Page";
+    ViewData["Title"] = "Профиль";
 }
 
-<div class="container text-center mt-5">
+@*<div class="container text-center mt-5">
     <div class="row">
         <div class="col">
-            <div class="card bg-dark text-white" style="border-radius: 1rem;">
+            <div class="card bg-dark text-white border-custom">
                 <div class="card-body p-5">
                     <div class="mb-md-5 mt-md-4 pb-5">
                         <h2 class="fw-bold mb-2 text-uppercase">Ваши авто</h2>
@@ -22,7 +22,7 @@
             </div>
         </div>
         <div class="col">
-            <div class="card bg-dark text-white" style="border-radius: 1rem;">
+            <div class="card bg-dark text-white border-custom">
                 <div class="card-body p-5 text-center">
                     <div class="mb-md-5 mt-md-4 pb-5">
                         <h2 class="fw-bold mb-2 text-uppercase">Ваши заявки</h2>
@@ -50,27 +50,60 @@
                             {
                                 <a class="btn gradient-custom mt-3 btn-lg" href="/addcar" role="button">Добавить авто</a>
                             }
-                            
+
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>*@
+
+<div class="container text-center mt-5 w-50">
+    <div class="card bg-dark text-white border-custom">
+        <div class="card-body p-5">
+            <div class="mb-md-5 mt-md-4 pb-5">
+                <h2 class="fw-bold mb-2 text-uppercase">Данные пользователя</h2>
+                <div class="input-group mt-md-4">
+                    <input type="text" class="form-control" placeholder="Имя" aria-label="Recipient's username with two button addons">
+                    <button class="btn btn-danger" type="button">Изменить</button>
+                    <button class="btn btn-success" type="button">Сохранить</button>
+                </div>
+                <div class="input-group mt-md-4">
+                    <input type="text" class="form-control" placeholder="Фамилия" aria-label="Recipient's username with two button addons">
+                    <button class="btn btn-danger" type="button">Изменить</button>
+                    <button class="btn btn-success" type="button">Сохранить</button>
+                </div>
+                <div class="input-group mt-md-4">
+                    <input type="text" class="form-control" placeholder="Адрес" aria-label="Recipient's username with two button addons">
+                    <button class="btn btn-danger" type="button">Изменить</button>
+                    <button class="btn btn-success" type="button">Сохранить</button>
+                </div>
+                <div class="input-group mt-md-4">
+                    <input type="text" class="form-control" placeholder="Пароль" aria-label="Recipient's username with two button addons">
+                    <button class="btn btn-danger" type="button">Изменить</button>
+                    <button class="btn btn-success" type="button">Сохранить</button>
+                </div>
+            </div>
+            <div class="justify-content-between p-5">
+                <a class="btn gradient-custom mt-3 btn-lg" href="/addcar" role="button">Ваши авто</a>
+                <a class="btn gradient-custom mt-3 btn-lg" href="/addrequest" role="button">Ваши заявки</a>
+            </div>
+        </div>
+    </div>
 </div>
 
-
-        <script>
-            async function remove(brand, model) {
-                const response = await fetch("/delcar", {
-                    method: "POST",
-                    headers: { "Accept": "application/json", "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        Brand: brand,
-                        Model: model
-                    })
-                });
-                if (response.ok)
-                    document.getElementById(brand + "_" + model).style.display = "none";
-            }
-        </script>
+<script>
+    async function remove(brand, model) {
+        const response = await fetch("/delcar", {
+            method: "POST",
+            headers: { "Accept": "application/json", "Content-Type": "application/json" },
+            body: JSON.stringify({
+                Brand: brand,
+                Model: model
+            })
+        });
+        if (response.ok)
+            document.getElementById(brand + "_" + model).style.display = "none";
+    }
+</script>

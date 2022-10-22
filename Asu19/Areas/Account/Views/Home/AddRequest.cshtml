@@ -1,20 +1,24 @@
 ﻿@model IEnumerable<Asu19.Areas.Account.Models.UserCarInfo>
 @{
-	ViewData["Title"] = "Login Page";
+	ViewData["Title"] = "Создать заявку";
 }
 
-<section class="login-page gradient-custom">
+<section class="login-page">
 	<div class="container">
 		<div class="align-content-center">
-			<section class="pb-4 gradient-custom">
+			<section class="pb-4">
 				<div class="row d-flex justify-content-center mt-4">
 					<div class="col-12 col-md-8 col-lg-6 col-xl-6">
-						<div class="card bg-dark text-white" style="border-radius: 1rem;">
+						<div class="card bg-dark text-white border-custom">
 							<div class="card-body p-5 text-center">
 								<div class="mb-md-5 mt-md-4 pb-5">
-									<h2 class="fw-bold mb-2 text-uppercase">Создание заявки</h2>
-									<p class="text-white-50 mb-5">Пожалуйста, выберите авто и услугу!</p>
-
+									<h2 class="fw-bold mb-2 text-uppercase">Ваши заявки</h2>
+									<ul class="list-group mt-2">
+										@*@foreach (var item in ViewBag.Requests)
+										{
+											<li class="list-group-item">@item.Status @item.StartTime</li>
+										}*@
+									</ul>
 									<form method="post" asp-area="Account" asp-controller="Home" asp-action="AddRequest">
 										<div class="form-outline form-white mb-4">
 											<select name="car" class="form-select" aria-label="Default select example">
