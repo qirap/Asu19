@@ -6,6 +6,7 @@
         public int? UserId { get; set; }
         public string? UserName { get; set; }
         public string? Car { get; set; }
+        public int? ServiceId { get; set; }
         public string? Service { get; set; }
         public string? Price { get; set; }
         public string? Employee { get; set; }

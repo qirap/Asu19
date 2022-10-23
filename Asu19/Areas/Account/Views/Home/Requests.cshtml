@@ -1,49 +1,56 @@
 ﻿@model IEnumerable<Asu19.Areas.Account.Models.UserRequestInfo>
 
 <table class="table table-dark table-striped">
-<thead>
-    <tr>
-        <th scope="col">#</th>
-        <th scope="col">Имя</th>
-        <th scope="col">Авто</th>
-        <th scope="col">Услуга</th>
-        <th scope="col">Цена</th>
-        <th scope="col">Работник</th>
-        <th scope="col">Статус</th>
-        <th scope="col">Время поступления</th>
-        <th scope="col">Завершено</th>
-        <th scope="col">#</th>
-    </tr>
-</thead>
-<tbody>
-     @foreach (var item in Model)
-     {
-         <tr>
-            <th scope="row">@item.Id</th>
-            <td>@item.UserName</td>
-            <td>@item.Car</td>
-            <td>@item.Service</td>
-            <td>@item.Price</td>
-            <td>@item.Employee</td>
-            <td>@item.Status</td>
-            <td>@item.StartTime</td>
-            <td>@item.EndTime</td>
-            <td>
-                    <a class="btn gradient-custom" href="/requests/@item.Id" role="button">Перейти</a>
-            </td>
-        </tr>
-     }
-</tbody>
+	<thead>
+		<tr>
+			<th scope="col">#</th>
+			<th scope="col">Имя</th>
+			<th scope="col">Авто</th>
+			<th scope="col">Услуга</th>
+			<th scope="col">Цена</th>
+			<th scope="col">Работник</th>
+			<th scope="col">Статус</th>
+			<th scope="col">Время поступления</th>
+			<th scope="col">Завершено</th>
+			<th scope="col">#</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<th scope="row">@item.Id</th>
+				<td>@item.UserName</td>
+				<td>@item.Car</td>
+				<td>@item.Service</td>
+				<td>@item.Price</td>
+				<td>@item.Employee</td>
+				<td>@item.Status</td>
+				<td>@item.StartTime</td>
+				@if (item.EndTime == null)
+				{
+					<td>-</td>
+				}
+				else
+				{
+					<td>@item.EndTime</td>
+				}
+				<td>
+					<a class="btn gradient-custom" href="/requests/@item.Id" role="button">Перейти</a>
+				</td>
+			</tr>
+		}
+	</tbody>
 </table>
 
 <nav aria-label="...">
-    <ul class="pagination pagination-sm">
-        <li class="page-item active" aria-current="page">
-            <span class="page-link">1</span>
-        </li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-    </ul>
+	<ul class="pagination pagination-sm">
+		<li class="page-item active" aria-current="page">
+			<span class="page-link">1</span>
+		</li>
+		<li class="page-item"><a class="page-link" href="#">2</a></li>
+		<li class="page-item"><a class="page-link" href="#">3</a></li>
+	</ul>
 </nav>
 
 <script>

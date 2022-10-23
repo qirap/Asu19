@@ -34,6 +34,33 @@ namespace Asu19.Areas.Account.Controllers
             return View(userInfo);
         }
 
+        [HttpPost]
+        [Route("/profile/firstname")]
+        public async Task UpdateFirstName([FromBody] UserUpdateInfo? userUpdateInfo)
+        {
+            db.Users.Where(u => u.Id == userUpdateInfo.Id).FirstOrDefault().FirstName = userUpdateInfo.NewValue;
+
+            await db.SaveChangesAsync();
+        }
+
+        [HttpPost]
+        [Route("/profile/lastname")]
+        public async Task UpdateLastName([FromBody] UserUpdateInfo? userUpdateInfo)
+        {
+            db.Users.Where(u => u.Id == userUpdateInfo.Id).FirstOrDefault().LastName = userUpdateInfo.NewValue;
+
+            await db.SaveChangesAsync();
+        }
+
+        [HttpPost]
+        [Route("/profile/address")]
+        public async Task UpdateAddress([FromBody] UserUpdateInfo? userUpdateInfo)
+        {
+            db.Users.Where(u => u.Id == userUpdateInfo.Id).FirstOrDefault().Address = userUpdateInfo.NewValue;
+
+            await db.SaveChangesAsync();
+        }
+
         [HttpGet]
         [Route("/login")]
         public IActionResult Login()
@@ -148,7 +175,7 @@ namespace Asu19.Areas.Account.Controllers
                                    Employee = e == null ? "None" : e.FirstName + " " + e.LastName,
                                    Status = requests.Status,
                                    StartTime = requests.StartTime,
-                                   EndTime = requests.EndTime ?? DateTime.Now,
+                                   EndTime = requests.EndTime ?? null,
                                };
 
             return View(await userRequests.ToListAsync());
@@ -158,8 +185,6 @@ namespace Asu19.Areas.Account.Controllers
         [Route("/requests/{id?}")]
         public IActionResult Request(int? id)
         {
-            ViewBag.Employees = db.Employees.ToList();
-            
             var userRequests = (from requests in db.Requests
                                 join users in db.Users on requests.UserId equals users.Id
                                 join cars in db.Cars on requests.CarId equals cars.Id
@@ -173,15 +198,53 @@ namespace Asu19.Areas.Account.Controllers
                                     UserId = users.Id,
                                     UserName = users.FirstName + " " + users.LastName,
                                     Car = cars.Brand + " " + cars.Model,
+                                    ServiceId = services.Id,
                                     Service = services.Name,
                                     Price = services.Price.ToString(),
                                     Employee = e == null ? "None" : e.FirstName + " " + e.LastName,
                                     Status = requests.Status,
                                     StartTime = requests.StartTime,
-                                    EndTime = requests.EndTime ?? DateTime.Now,
+                                    EndTime = requests.EndTime ?? null
                                 }).FirstOrDefault();
 
+            var canEmployees = from es in db.EmployeeService
+                               join e in db.Employees on es.EmployeeId equals e.Id
+                               where es.ServiceId == userRequests.ServiceId
+                               select new Employees
+                               {
+                                   Id = e.Id,
+                                   FirstName = e.FirstName,
+                                   LastName = e.LastName,
+                                   Address = e.Address,
+                               };
+
+            ViewBag.Employees = canEmployees.ToList();
+
             return View(userRequests);
+        }
+
+        [HttpPost]
+        [Route("/updatestatus")]
+        public async Task UpdateStatus([FromBody] RequestUpdateInfo requestUpdateInfo)
+        {
+            var request = db.Requests.Where(r => r.Id == requestUpdateInfo.RequestId).FirstOrDefault();
+
+            request.EmployeeId = requestUpdateInfo.EmployeeId;
+            request.Status = "В работе";
+
+            await db.SaveChangesAsync();
+        }
+
+        [HttpPost]
+        [Route("/confirmcompletion")]
+        public async Task ConfirmCompletion([FromBody] RequestUpdateInfo requestUpdateInfo)
+        {
+            var request = db.Requests.Where(r => r.Id == requestUpdateInfo.RequestId).FirstOrDefault();
+
+            request.Status = "Выполнено";
+            request.EndTime = DateTime.Now;
+
+            await db.SaveChangesAsync();
         }
 
         [Route("/logout")]
