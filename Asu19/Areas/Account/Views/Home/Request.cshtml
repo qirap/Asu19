@@ -1,0 +1,47 @@
+﻿@model Asu19.Areas.Account.Models.UserRequestInfo
+@{
+    ViewData["Title"] = $"Заявка {Model.Id}";
+}
+
+<table class="table table-dark table-striped">
+    <tbody>
+        <tr>
+            <th scope="row">id</th>
+            <td>@Model.Id</td>
+        </tr>
+        <tr>
+            <th scope="row">Имя</th>
+            <td>@Model.UserName</td>
+        </tr>
+        <tr>
+            <th scope="row">Авто</th>
+            <td>@Model.Car</td>
+        </tr>
+        <tr>
+            <th scope="row">Услуга</th>
+            <td>@Model.Service</td>
+        </tr>
+        <tr>
+            <th scope="row">Цена</th>
+            <td>@Model.Price</td>
+        </tr>
+        <tr>
+            <th scope="row">Работник</th>
+            <td>@Model.Employee</td>
+        </tr>
+        <tr>
+            <th scope="row">Статус</th>
+            <td>@Model.Status</td>
+        </tr>
+        <tr>
+            <th scope="row">Время поступления</th>
+            <td>@Model.StartTime</td>
+        </tr>
+        <tr>
+            <th scope="row">Завершено</th>
+            <td>@Model.EndTime</td>
+        </tr>
+    </tbody>
+</table>
+
+

@@ -17,7 +17,7 @@
                                         <ul class="list-group">
                                             @foreach (var item in Model)
                                             {
-                                                <li id="@($"{item.Brand}_{item.Model}")" class="list-group-item w-100">@item.Brand @item.Model<button onclick="remove('@item.Brand', '@item.Model')" type="button" class="btn btn-danger float-end">Delete</button></li>
+                                                <li id="@($"{item.Brand}_{item.Model}")" class="list-group-item w-100">@item.Brand @item.Model<button onclick="remove('@item.Brand', '@item.Model')" type="button" class="btn btn-danger float-end">Удалить</button></li>
                                                 
                                             }
                                         </ul>

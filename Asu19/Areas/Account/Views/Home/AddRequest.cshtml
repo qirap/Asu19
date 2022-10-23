@@ -1,4 +1,4 @@
-﻿@*@model IEnumerable<Asu19.Areas.Account.Models.UserRequestInfo>*@
+﻿@model IEnumerable<Asu19.Areas.Account.Models.UserRequestInfo>
 @{
 	ViewData["Title"] = "Создать заявку";
 }
@@ -14,18 +14,18 @@
 								<div class="mb-md-5 mt-md-4 pb-5">
 									<h2 class="fw-bold mb-2 text-uppercase">Ваши заявки</h2>
 									<ul class="list-group mt-2">
-										@*@foreach (var item in ViewBag.Requests)
+										@foreach (var item in Model)
 										{
-											<li class="list-group-item">@item.Status @item.StartTime</li>
-										}*@
+											<li class="list-group-item">@item.Car @item.Service</li>
+										}
 									</ul>
 									<form method="post" asp-area="Account" asp-controller="Home" asp-action="AddRequest">
 										<div class="form-outline form-white mb-4">
 											<select name="car" class="form-select" aria-label="Default select example">
-												@*@foreach (var item in Model)
+												@foreach (var item in ViewBag.Cars)
 												{
 													<option value="@($"{item.Brand}_{item.Model}")">@item.Brand @item.Model</option>
-												}*@
+												}
 											</select>
 										</div>
 

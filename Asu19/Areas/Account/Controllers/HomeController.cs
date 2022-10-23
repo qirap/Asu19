@@ -27,25 +27,19 @@ namespace Asu19.Areas.Account.Controllers
 
         [Route("/profile")]
         [Authorize]
-        public async Task<IActionResult> Profile()
+        public IActionResult Profile()
         {
-            var userCarInfo = from userCar in db.UserCar
-                              join cars in db.Cars on userCar.CarId equals cars.Id
-                              where userCar.UserId == Convert.ToInt32(User.Claims.FirstOrDefault().Value)
-                              select new UserCarInfo
-                              {
-                                  Brand = cars.Brand,
-                                  Model = cars.Model,
-                              };
-            ViewBag.Requests = db.Requests;
+            var userInfo = db.Users.Where(u => u.Id == Convert.ToInt32(User.Claims.ElementAt(0).Value)).FirstOrDefault();
 
-            return View(await userCarInfo.ToListAsync());
+            return View(userInfo);
         }
 
         [HttpGet]
         [Route("/login")]
         public IActionResult Login()
         {
+            if (User.Identity.IsAuthenticated)
+                return new RedirectResult("/profile");
             return View();
         }
 
@@ -83,6 +77,8 @@ namespace Asu19.Areas.Account.Controllers
         [Route("/registration")]
         public IActionResult Registration()
         {
+            if (User.Identity.IsAuthenticated)
+                return new RedirectResult("/profile");
             return View();
         }
 
@@ -130,8 +126,8 @@ namespace Asu19.Areas.Account.Controllers
             return new RedirectResult("/");
         }
 
-        [Authorize]
-        [Route("/requests/{id?}")]
+        [Authorize(Roles = "admin")]
+        [Route("/requests")]
         public async Task<IActionResult> Requests(int? id)
         {
             var userRequests = from requests in db.Requests
@@ -140,6 +136,7 @@ namespace Asu19.Areas.Account.Controllers
                                join services in db.Services on requests.ServiceId equals services.Id
                                join employees in db.Employees on requests.EmployeeId equals employees.Id into em_join
                                from e in em_join.DefaultIfEmpty()
+                               orderby requests.Id
                                select new UserRequestInfo
                                {
                                    Id = requests.Id,
@@ -154,12 +151,35 @@ namespace Asu19.Areas.Account.Controllers
                                    EndTime = requests.EndTime ?? DateTime.Now,
                                };
 
-            if (User.Claims.ElementAt(2).Value == "user")
-            {
-                userRequests = userRequests.Where(ur => ur.UserId == Convert.ToInt32(User.Claims.FirstOrDefault().Value));
-            }
-
             return View(await userRequests.ToListAsync());
+        }
+
+        [Authorize(Roles = "admin")]
+        [Route("/requests/{id?}")]
+        public IActionResult Request(int? id)
+        {
+            var userRequests = (from requests in db.Requests
+                                join users in db.Users on requests.UserId equals users.Id
+                                join cars in db.Cars on requests.CarId equals cars.Id
+                                join services in db.Services on requests.ServiceId equals services.Id
+                                join employees in db.Employees on requests.EmployeeId equals employees.Id into em_join
+                                from e in em_join.DefaultIfEmpty()
+                                where requests.Id == id
+                                select new UserRequestInfo
+                                {
+                                    Id = requests.Id,
+                                    UserId = users.Id,
+                                    UserName = users.FirstName + " " + users.LastName,
+                                    Car = cars.Brand + " " + cars.Model,
+                                    Service = services.Name,
+                                    Price = services.Price.ToString(),
+                                    Employee = e == null ? "None" : e.FirstName + " " + e.LastName,
+                                    Status = requests.Status,
+                                    StartTime = requests.StartTime,
+                                    EndTime = requests.EndTime ?? DateTime.Now,
+                                }).FirstOrDefault();
+
+            return View(userRequests);
         }
 
         [Route("/logout")]
@@ -192,10 +212,33 @@ namespace Asu19.Areas.Account.Controllers
             if (!ModelState.IsValid)
                 return new HtmlResult("Неверный ввод", "/addcar");
 
-            Cars? car = db.Cars.FirstOrDefault(c => c.Brand == userCarInfo.Brand.Trim() && c.Model == userCarInfo.Model.Trim());
+            string brand = userCarInfo.Brand.Trim();
+            string model = userCarInfo.Model.Trim();
+
+            Cars? car = db.Cars.FirstOrDefault(c => c.Brand == brand && c.Model == model);
 
             if (car != null)
             {
+                db.UserCar.Add(new UserCar
+                {
+                    Id = db.UserCar.Max(uc => uc.Id) + 1,
+                    UserId = Convert.ToInt32(User.Claims.ElementAt(0).Value),
+                    CarId = car.Id,
+                });
+
+                await db.SaveChangesAsync();
+            }
+            else
+            {
+                car = new Cars
+                {
+                    Id = db.Cars.Max(c => c.Id) + 1,
+                    Brand = brand,
+                    Model = model,
+                };
+
+                db.Cars.Add(car);
+
                 db.UserCar.Add(new UserCar
                 {
                     Id = db.UserCar.Max(uc => uc.Id) + 1,
@@ -213,8 +256,6 @@ namespace Asu19.Areas.Account.Controllers
         [Route("/delcar")]
         public async Task DelCar([FromBody] UserCarInfo userCarInfo)
         {
-            Console.WriteLine($"\n\n*** {userCarInfo.Brand} ***\n\n");
-
             Cars? car = db.Cars.FirstOrDefault(c => c.Brand == userCarInfo.Brand && c.Model == userCarInfo.Model);
 
             UserCar? userCar = db.UserCar.FirstOrDefault(uc => uc.UserId == Convert.ToInt32(User.Claims.ElementAt(0).Value) && uc.CarId == car.Id);
@@ -229,18 +270,41 @@ namespace Asu19.Areas.Account.Controllers
         [Route("/addrequest")]
         public async Task<IActionResult> AddRequest()
         {
+            var userCars = from userCar in db.UserCar
+                           join cars in db.Cars on userCar.CarId equals cars.Id
+                           where userCar.UserId == Convert.ToInt32(User.Claims.FirstOrDefault().Value)
+                           select new UserCarInfo
+                           {
+                               Brand = cars.Brand,
+                               Model = cars.Model,
+                           };
+
+            ViewBag.Cars = await userCars.ToListAsync();
+
             ViewBag.Services = db.Services;
 
-            var userCarInfo = from userCar in db.UserCar
-                              join cars in db.Cars on userCar.CarId equals cars.Id
-                              where userCar.UserId == Convert.ToInt32(User.Claims.FirstOrDefault().Value)
-                              select new UserCarInfo
-                              {
-                                  Brand = cars.Brand,
-                                  Model = cars.Model,
-                              };
+            var userRequestInfo = from requests in db.Requests
+                                  join users in db.Users on requests.UserId equals users.Id
+                                  join cars in db.Cars on requests.CarId equals cars.Id
+                                  join services in db.Services on requests.ServiceId equals services.Id
+                                  join employees in db.Employees on requests.EmployeeId equals employees.Id into em_join
+                                  from e in em_join.DefaultIfEmpty()
+                                  where users.Id == Convert.ToInt32(User.Claims.ElementAt(0).Value)
+                                  select new UserRequestInfo
+                                  {
+                                      Id = requests.Id,
+                                      UserId = users.Id,
+                                      UserName = users.FirstName + " " + users.LastName,
+                                      Car = cars.Brand + " " + cars.Model,
+                                      Service = services.Name,
+                                      Price = services.Price.ToString(),
+                                      Employee = e == null ? "None" : e.FirstName + " " + e.LastName,
+                                      Status = requests.Status,
+                                      StartTime = requests.StartTime,
+                                      EndTime = requests.EndTime ?? DateTime.Now,
+                                  };
 
-            return View(await userCarInfo.ToListAsync());
+            return View(await userRequestInfo.ToListAsync());
         }
 
         [HttpPost]
@@ -263,7 +327,7 @@ namespace Asu19.Areas.Account.Controllers
             });
             await db.SaveChangesAsync();
 
-            return new HtmlResult(car + " " + serviceId.ToString(), "/profile");
+            return new RedirectResult("/addrequest");
         }
 
         public void AddValidationRule(IUserAuthInfo userAuthInfo)
