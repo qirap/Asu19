@@ -11,10 +11,10 @@
                     <div class="col-12 col-md-8 col-lg-6 col-xl-6">
                         <div class="card bg-dark text-white border-custom">
                             <div class="card-body p-5 text-center">
-                                <div class="mb-md-5 mt-md-4 pb-5">
+                                <div class="mb-md-5 mt-2">
                                     <h2 class="fw-bold mb-2 text-uppercase">Ваши авто</h2>
-                                    <div class="mb-md-5 mt-md-2 pb-5">
-                                        <ul class="list-group">
+                                    <div class="mt-2">
+                                        <ul class="list-group car-list">
                                             @foreach (var item in Model)
                                             {
                                                 <li id="@($"{item.Brand}_{item.Model}")" class="list-group-item w-100">@item.Brand @item.Model<button onclick="remove('@item.Brand', '@item.Model')" type="button" class="btn btn-danger float-end">Удалить</button></li>
@@ -24,20 +24,18 @@
                                     </div>
 
                                     <form method="post" asp-area="Account" asp-controller="Home" asp-action="AddCar">
-                                        <div class="form-outline form-white mb-4">
-                                            <h3 class="fw-bold mb-2 text-uppercase">Добавить новый автомобиль</h3>
-                                            <input name="Brand" id="typeLoginX" class="form-control form-control-lg">
-                                            <label class="form-label" for="typeLoginX" style="margin-left: 0px;">Марка</label>
+                                        <div class="form-outline form-white mb-2">
+                                            <h3 class="fw-bold mb-2 text-uppercase mt-3">Добавить новый автомобиль</h3>
+                                            <input name="Brand" id="typeLoginX" placeholder="Марка" class="form-control form-control-lg">
                                             <div class="form-notch"><div class="form-notch-leading" style="width: 9px;"></div><div class="form-notch-middle" style="width: 40px;"></div><div class="form-notch-trailing"></div></div>
                                         </div>
 
-                                        <div class="form-outline form-white mb-4">
-                                            <input name="Model" id="typePasswordX" class="form-control form-control-lg">
-                                            <label class="form-label" for="typePasswordX" style="margin-left: 0px;">Модель</label>
+                                        <div class="form-outline form-white mb-2">
+                                            <input name="Model" id="typePasswordX" placeholder="Модель" class="form-control form-control-lg">
                                             <div class="form-notch"><div class="form-notch-leading" style="width: 9px;"></div><div class="form-notch-middle" style="width: 64px;"></div><div class="form-notch-trailing"></div></div>
                                         </div>
 
-                                        <button class="btn btn-outline-white btn-lg px-5 gradient-custom" type="submit">Добавить</button>
+                                        <button class="btn btn-outline-white btn-lg px-5 gradient-custom mt-3" type="submit">Добавить</button>
                                     </form>
                                 </div>
                             </div>

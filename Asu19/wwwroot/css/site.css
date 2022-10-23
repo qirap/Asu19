@@ -58,3 +58,15 @@ body {
 .stroke {
     text-shadow: black 0 0 2px;
 }
+
+.car-list {
+    max-height: 275px;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.request-list {
+    max-height: 205px;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+}

@@ -13,7 +13,7 @@
 							<div class="card-body p-5 text-center">
 								<div class="mb-md-5 mt-md-4 pb-5">
 									<h2 class="fw-bold mb-2 text-uppercase">Ваши заявки</h2>
-									<ul class="list-group mt-2">
+									<ul class="list-group request-list mt-1">
 										@foreach (var item in Model)
 										{
 											<li class="list-group-item">@item.Car @item.Service</li>
@@ -21,6 +21,7 @@
 									</ul>
 									<form method="post" asp-area="Account" asp-controller="Home" asp-action="AddRequest">
 										<div class="form-outline form-white mb-4">
+											<h3 class="fw-bold mb-2 text-uppercase mt-3">Создать заявку</h3>
 											<select name="car" class="form-select" aria-label="Default select example">
 												@foreach (var item in ViewBag.Cars)
 												{

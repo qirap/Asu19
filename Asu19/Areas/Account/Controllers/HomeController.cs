@@ -158,6 +158,8 @@ namespace Asu19.Areas.Account.Controllers
         [Route("/requests/{id?}")]
         public IActionResult Request(int? id)
         {
+            ViewBag.Employees = db.Employees.ToList();
+            
             var userRequests = (from requests in db.Requests
                                 join users in db.Users on requests.UserId equals users.Id
                                 join cars in db.Cars on requests.CarId equals cars.Id

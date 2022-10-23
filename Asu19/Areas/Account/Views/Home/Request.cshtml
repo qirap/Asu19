@@ -27,7 +27,21 @@
         </tr>
         <tr>
             <th scope="row">Работник</th>
-            <td>@Model.Employee</td>
+            <td>
+                @if (Model.Employee == "None")
+                {
+                    <select class="form-select w-25 bg-dark text-white" aria-label="Default select example">
+                        @foreach (var item in ViewBag.Employees)
+                        {
+                            <option value="@item.Id">@item.FirstName @item.LastName</option>
+                        }
+                    </select>
+                }
+                else
+                {
+                <td>@Model.Employee</td>
+                }
+            </td>
         </tr>
         <tr>
             <th scope="row">Статус</th>
@@ -43,5 +57,9 @@
         </tr>
     </tbody>
 </table>
+<div class="d-flex justify-content-center">
+    <button type="button" class="btn gradient-custom border-dark">Изменить статус</button>
+</div>
+
 
 
