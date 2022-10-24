@@ -28,15 +28,15 @@
                 {
                     <div class="text-end">
                         <label class="p-2">@User.Claims.ElementAt(1).Value</label>
-                        <button type="button" onclick="document.location='/profile'" class="btn btn-dark me-2">Профиль</button>
-                        <button type="button" onclick="document.location='/logout'" class="btn btn-dark">Выйти</button>
+                        <button type="button" onclick="document.location='/profile'" class="btn btn-dark me-2 button-custom">Профиль</button>
+                        <button type="button" onclick="document.location='/logout'" class="btn btn-dark button-custom">Выйти</button>
                     </div>
                 }
                 else
                 {
                     <div class="text-end">
-                        <button type="button" onclick="document.location='/login'" class="btn btn-dark me-2">Логин</button>
-                        <button type="button" onclick="document.location='/registration'" class="btn btn-dark">Регистрация</button>
+                        <button type="button" onclick="document.location='/login'" class="btn btn-dark me-2 button-custom">Логин</button>
+                        <button type="button" onclick="document.location='/registration'" class="btn btn-dark button-custom">Регистрация</button>
                     </div>
                 }
             </div>

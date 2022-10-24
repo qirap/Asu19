@@ -70,3 +70,7 @@ body {
     overflow: auto;
     -webkit-overflow-scrolling: touch;
 }
+
+.button-custom{
+    border-radius: 3rem;
+}

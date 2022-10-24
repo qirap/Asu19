@@ -17,7 +17,7 @@
                                         <ul class="list-group car-list">
                                             @foreach (var item in Model)
                                             {
-                                                <li id="@($"{item.Brand}_{item.Model}")" class="list-group-item w-100">@item.Brand @item.Model<button onclick="remove('@item.Brand', '@item.Model')" type="button" class="btn btn-danger float-end">Удалить</button></li>
+                                                <li id="@($"{item.Brand}_{item.Model}")" class="list-group-item w-100">@item.Brand @item.Model<button onclick="remove('@item.Brand', '@item.Model')" type="button" class="btn btn-danger button-custom float-end">Удалить</button></li>
                                                 
                                             }
                                         </ul>
@@ -35,7 +35,7 @@
                                             <div class="form-notch"><div class="form-notch-leading" style="width: 9px;"></div><div class="form-notch-middle" style="width: 64px;"></div><div class="form-notch-trailing"></div></div>
                                         </div>
 
-                                        <button class="btn btn-outline-white btn-lg px-5 gradient-custom mt-3" type="submit">Добавить</button>
+                                        <button class="btn btn-outline-white btn-lg px-5 gradient-custom mt-3 button-custom" type="submit">Добавить</button>
                                     </form>
                                 </div>
                             </div>
