@@ -16,31 +16,53 @@
 									<ul class="list-group request-list mt-1">
 										@foreach (var item in Model)
 										{
-											<li class="list-group-item">@item.Car @item.Service</li>
+											<li class="list-group-item">@item.Car - @item.Service - @item.Price ₽ 
+												@if (item.Status == "Обработка")
+												{
+													<div class="text-info">@item.Status</div>
+												}
+												@if (item.Status == "В работе")
+												{
+													<div class="text-warning">@item.Status</div>
+												}
+
+												@if (item.Status == "Выполнено")
+												{
+													<div class="text-success">@item.Status</div>
+												}
+											</li>
 										}
 									</ul>
-									<form method="post" asp-area="Account" asp-controller="Home" asp-action="AddRequest">
-										<div class="form-outline form-white mb-4">
-											<h3 class="fw-bold mb-2 text-uppercase mt-3">Создать заявку</h3>
-											<select name="car" class="form-select" aria-label="Default select example">
-												@foreach (var item in ViewBag.Cars)
-												{
-													<option value="@($"{item.Brand}_{item.Model}")">@item.Brand @item.Model</option>
-												}
-											</select>
-										</div>
 
-										<div class="form-outline form-white mb-4">
-											<select name="serviceId" class="form-select" aria-label="Default select example">
-												@foreach (var item in ViewBag.Services)
-												{
-													<option value="@item.Id">@item.Name - @item.Price</option>
-												}
-											</select>
-										</div>
+									@if (ViewBag.Cars.Count == 0)
+									{
+										<a class="btn btn-primary" href="/addcar" role="button">Добавить авто</a>
+									}
+									else
+									{
+										<form method="post" asp-area="Account" asp-controller="Home" asp-action="AddRequest">
+											<div class="form-outline form-white mb-4">
+												<h3 class="fw-bold mb-2 text-uppercase mt-3">Создать заявку</h3>
+												<select name="car" class="form-select" aria-label="Default select example">
+													@foreach (var item in ViewBag.Cars)
+													{
+														<option value="@($"{item.Brand}_{item.Model}")">@item.Brand @item.Model</option>
+													}
+												</select>
+											</div>
 
-										<button class="btn btn-outline-white btn-lg px-5 gradient-custom" type="submit">Создать</button>
-									</form>
+											<div class="form-outline form-white mb-4">
+												<select name="serviceId" class="form-select" aria-label="Default select example">
+													@foreach (var item in ViewBag.Services)
+													{
+														<option value="@item.Id">@item.Name - @item.Price</option>
+													}
+												</select>
+											</div>
+
+											<button class="btn btn-outline-white btn-lg px-5 gradient-custom" type="submit">Создать</button>
+										</form>
+									}
 								</div>
 							</div>
 						</div>

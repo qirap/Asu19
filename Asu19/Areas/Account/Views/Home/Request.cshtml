@@ -65,11 +65,11 @@
     </tbody>
 </table>
 <div class="d-flex justify-content-center">
-    @if (Model.Employee == "None")
+    @if (Model.Status == "Обработка")
     {
         <button type="button" class="btn gradient-custom border-dark" onclick="updateStatus()">Изменить статус</button>
     }
-    else
+    else if (Model.Status == "В работе")
     {
         <button type="button" class="btn gradient-custom border-dark" onclick="confirmCompletion()">Завершить выполнение</button>
     }

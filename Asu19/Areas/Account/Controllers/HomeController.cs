@@ -29,6 +29,9 @@ namespace Asu19.Areas.Account.Controllers
         [Authorize]
         public IActionResult Profile()
         {
+            if (User.Claims.ElementAt(2).Value == "admin")
+                return new RedirectResult("/requests");
+
             var userInfo = db.Users.Where(u => u.Id == Convert.ToInt32(User.Claims.ElementAt(0).Value)).FirstOrDefault();
 
             return View(userInfo);
