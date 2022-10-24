@@ -50,7 +50,7 @@ body {
 }
 
 .border-custom {
-    border-radius: 1rem; 
+    border-radius: 3rem; 
     border:solid; 
     border-color: goldenrod;
 }
