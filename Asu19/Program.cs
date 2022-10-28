@@ -33,6 +33,8 @@ app.UseAuthentication();
 
 app.UseRouting();
 
+app.UseStatusCodePagesWithReExecute("/error/{0}");
+
 app.UseAuthorization();
 
 app.MapControllerRoute(

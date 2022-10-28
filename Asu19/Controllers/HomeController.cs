@@ -22,7 +22,6 @@ namespace Asu19.Controllers
             return View(await db.Services.ToListAsync());
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
@@ -38,6 +37,12 @@ namespace Asu19.Controllers
         public IActionResult About()
         {
             return View();
+        }
+
+        [Route("/error/{code}")]
+        public IActionResult ErrorPage(int code)
+        {
+            return View(code);
         }
     }
 }

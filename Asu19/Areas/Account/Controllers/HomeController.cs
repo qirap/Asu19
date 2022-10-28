@@ -8,10 +8,13 @@ using Microsoft.AspNetCore.Hosting.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using System;
 using System.Data;
 using System.Security.Claims;
 using System.Security.Policy;
+using Xceed.Document.NET;
+using Xceed.Words.NET;
 
 namespace Asu19.Areas.Account.Controllers
 {
@@ -188,6 +191,9 @@ namespace Asu19.Areas.Account.Controllers
         [Route("/requests/{id?}")]
         public IActionResult Request(int? id)
         {
+            if (id == null)
+                return new NotFoundResult();
+
             var userRequests = (from requests in db.Requests
                                 join users in db.Users on requests.UserId equals users.Id
                                 join cars in db.Cars on requests.CarId equals cars.Id
@@ -210,6 +216,9 @@ namespace Asu19.Areas.Account.Controllers
                                     EndTime = requests.EndTime ?? null
                                 }).FirstOrDefault();
 
+            if (userRequests == null)
+                return new NotFoundResult();
+
             var canEmployees = from es in db.EmployeeService
                                join e in db.Employees on es.EmployeeId equals e.Id
                                where es.ServiceId == userRequests.ServiceId
@@ -224,6 +233,97 @@ namespace Asu19.Areas.Account.Controllers
             ViewBag.Employees = canEmployees.ToList();
 
             return View(userRequests);
+        }
+
+        [Authorize]
+        [Route("/requests/cheque/{id?}")]
+        public async Task<IActionResult> Cheque(int? id)
+        {
+            if (id == null)
+                return new NotFoundResult();
+
+            var userRequests = (from requests in db.Requests
+                                join users in db.Users on requests.UserId equals users.Id
+                                join cars in db.Cars on requests.CarId equals cars.Id
+                                join services in db.Services on requests.ServiceId equals services.Id
+                                join employees in db.Employees on requests.EmployeeId equals employees.Id into em_join
+                                from e in em_join.DefaultIfEmpty()
+                                where requests.Id == id
+                                select new UserRequestInfo
+                                {
+                                    Id = requests.Id,
+                                    UserId = users.Id,
+                                    UserName = users.FirstName + " " + users.LastName,
+                                    Car = cars.Brand + " " + cars.Model,
+                                    ServiceId = services.Id,
+                                    Service = services.Name,
+                                    Price = services.Price.ToString(),
+                                    Employee = e == null ? "None" : e.FirstName + " " + e.LastName,
+                                    Status = requests.Status,
+                                    StartTime = requests.StartTime,
+                                    EndTime = requests.EndTime ?? null
+                                }).FirstOrDefault();
+
+            if (userRequests == null || userRequests.Status != "Выполнено")
+                return new NotFoundResult();
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                var doc = DocX.Create(ms);
+
+                var image = doc.AddImage("wwwroot/img/AVTO_AV.png");
+                var p = image.CreatePicture();
+                p.Width = 100;
+                p.Height = 100;
+
+                var parImg = doc.InsertParagraph(" ");
+                parImg.Alignment = Alignment.center;
+                parImg.InsertPicture(p);
+
+                var par = doc.InsertParagraph("AutoService");
+                par.Alignment = Alignment.center;
+                par.FontSize(30);
+                par.Bold(true);
+
+                par = doc.InsertParagraph("Заявка выполнена");
+                par.Alignment = Alignment.center;
+                par.FontSize(20);
+                par.Bold(true);
+
+
+                Table t = doc.AddTable(7, 2);
+                t.Alignment = Alignment.center;
+                t.Design = TableDesign.ColorfulListAccent3;
+
+                t.Rows[0].Cells[0].Paragraphs.First().Append("Заявка");
+                t.Rows[0].Cells[1].Paragraphs.First().Append(userRequests.Id.ToString());
+
+                t.Rows[1].Cells[0].Paragraphs.First().Append("Имя клиента");
+                t.Rows[1].Cells[1].Paragraphs.First().Append(userRequests.UserName);
+
+                t.Rows[2].Cells[0].Paragraphs.First().Append("Авто");
+                t.Rows[2].Cells[1].Paragraphs.First().Append(userRequests.Car);
+
+                t.Rows[3].Cells[0].Paragraphs.First().Append("Услуга");
+                t.Rows[3].Cells[1].Paragraphs.First().Append(userRequests.Service);
+
+                t.Rows[4].Cells[0].Paragraphs.First().Append("Время прихода заявки");
+                t.Rows[4].Cells[1].Paragraphs.First().Append(userRequests.StartTime.ToString());
+
+                t.Rows[5].Cells[0].Paragraphs.First().Append("Время завершения");
+                t.Rows[5].Cells[1].Paragraphs.First().Append(userRequests.EndTime.ToString());
+
+                t.Rows[6].Cells[0].Paragraphs.First().Append("Стоимость");
+                t.Rows[6].Cells[1].Paragraphs.First().Append(userRequests.Price.ToString() + " рублей");
+
+                doc.InsertTable(t);
+
+                doc.InsertParagraph($"\n{DateTime.Now}\t\t\t\t\t\t\t\t\t__________");
+
+                doc.Save();
+
+                return File(ms.ToArray(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "Cheque.docx");
+            }
         }
 
         [HttpPost]
