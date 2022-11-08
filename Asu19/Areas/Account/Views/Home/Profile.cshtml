@@ -43,43 +43,59 @@
 
 	async function saveFirstname(field) {
 		var val = document.getElementById(field).value;
-        const response = await fetch("/profile/firstname", {
-            method: "POST",
-            headers: { "Accept": "application/json", "Content-Type": "application/json" },
-            body: JSON.stringify({
-				id : @(Model.Id),
-                newValue : val,
-            })
-        });
-        if (response.ok)
-			location.reload();
+		if (val.length > 3 && val.length < 33) {
+			const response = await fetch("/profile/firstname", {
+				method: "POST",
+					headers: { "Accept": "application/json", "Content-Type": "application/json" },
+					body: JSON.stringify({
+						id : @(Model.Id),
+						newValue : val,
+					})
+				});
+			if (response.ok)
+				location.reload();
+		}
+		else{
+			alert("Неверный ввод");
+		}
     }
 
 	async function saveLastname(field) {
 		var val = document.getElementById(field).value;
-		const response = await fetch("/profile/lastname", {
-            method: "POST",
-            headers: { "Accept": "application/json", "Content-Type": "application/json" },
-            body: JSON.stringify({
-				id : @(Model.Id),
-                newValue : val,
-            })
-        });
-        if (response.ok)
-			location.reload();
+		if (val.length > 3 && val.length < 32) {
+			const response = await fetch("/profile/lastname", {
+				method: "POST",
+				headers: { "Accept": "application/json", "Content-Type": "application/json" },
+				body: JSON.stringify({
+					id: @(Model.Id),
+					newValue: val,
+				})
+			});
+			if (response.ok)
+				location.reload();
+		}
+		else{
+			alert("Неверный ввод");
+		}
     }
 
 	async function saveAddress(field) {
 		var val = document.getElementById(field).value;
-		const response = await fetch("/profile/address", {
-			method: "POST",
-			headers: { "Accept": "application/json", "Content-Type": "application/json" },
-			body: JSON.stringify({
-				id: @(Model.Id),
-				newValue: val,
-			})
-		});
-		if (response.ok)
-			location.reload();
+		if (val.length > 3 && val.length < 32)
+		{
+			const response = await fetch("/profile/address", {
+				method: "POST",
+				headers: { "Accept": "application/json", "Content-Type": "application/json" },
+				body: JSON.stringify({
+					id: @(Model.Id),
+					newValue: val,
+				})
+			});
+			if (response.ok)
+				location.reload();
+		}
+		else{
+			alert("Неверный ввод");
+		}
 	}
 </script>

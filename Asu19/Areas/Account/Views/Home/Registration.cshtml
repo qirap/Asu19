@@ -1,54 +1,67 @@
-﻿@{
-    ViewData["Title"] = "Регистрация";
+﻿@model Asu19.Areas.Account.Models.UserRegInfo
+@{
+	ViewData["Title"] = "Регистрация";
 }
 
 <section class="registration">
-    <div class="container">
-        <div class="align-content-center">
-            <section class="pb-4">
-                <div class="row d-flex justify-content-center mt-4">
-                    <div class="col-12 col-md-8 col-lg-6 col-xl-6">
-                        <div class="card bg-dark text-white border-custom">
-                            <div class="card-body p-5 text-center">
+	<div class="container">
+		<div class="align-content-center">
+			<section class="pb-4">
+				<div class="row d-flex justify-content-center mt-4">
+					<div class="col-12 col-md-8 col-lg-6 col-xl-6">
+						<div class="card bg-dark text-white border-custom">
+							<div class="card-body p-5 text-center">
 
-                                <div class="mb-md-5 mt-md-4 pb-5">
+								<div class="mb-md-5 mt-md-4 pb-5">
 
-                                    <h2 class="fw-bold mb-2 text-uppercase">Регистрация</h2>
-                                    <p class="text-white-50 mb-5">Пожалуйста введите необходимые данные!</p>
-                                    <form method="post" asp-area="Account" asp-controller="Home" asp-action="Registration">
-                                        <div class="form-outline form-white mb-4">
-                                            <input name="Login" type="login" id="typeLoginX" placeholder="Логин" class="form-control form-control-lg">
-                                            <div class="form-notch"><div class="form-notch-leading" style="width: 9px;"></div><div class="form-notch-middle" style="width: 40px;"></div><div class="form-notch-trailing"></div></div>
-                                        </div>
+									<h2 class="fw-bold mb-2 text-uppercase">Регистрация</h2>
+									<p class="text-white-50 mb-5">Пожалуйста введите необходимые данные!</p>
+									<form method="post" asp-area="Account" asp-controller="Home" asp-action="Registration">
+										<div class="form-outline form-white mb-4">
+											<input asp-for="Login" type="login" id="typeLoginX" placeholder="Логин" class="form-control form-control-lg">
+											<span asp-validation-for="Login" class="text-danger"></span>
+											<div class="form-notch"><div class="form-notch-leading" style="width: 9px;"></div><div class="form-notch-middle" style="width: 40px;"></div><div class="form-notch-trailing"></div></div>
+										</div>
 
-                                        <div class="form-outline form-white mb-4">
-                                            <input name="Password" type="password" id="typePasswordX" placeholder="Пароль" class="form-control form-control-lg">
-                                            <div class="form-notch"><div class="form-notch-leading" style="width: 9px;"></div><div class="form-notch-middle" style="width: 64px;"></div><div class="form-notch-trailing"></div></div>
-                                        </div>
+										<div class="form-outline form-white mb-4">
+											<input asp-for="Password" type="password" id="typePasswordX" placeholder="Пароль" class="form-control form-control-lg">
+											<span asp-validation-for="Password" class="text-danger"></span>
+											<div class="form-notch"><div class="form-notch-leading" style="width: 9px;"></div><div class="form-notch-middle" style="width: 64px;"></div><div class="form-notch-trailing"></div></div>
+										</div>
 
-                                        <div class="form-outline form-white mb-4">
-                                            <input name="FirstName" type="firstname" id="typeFirstNameX" placeholder="Имя" class="form-control form-control-lg">
-                                            <div class="form-notch"><div class="form-notch-leading" style="width: 9px;"></div><div class="form-notch-middle" style="width: 64px;"></div><div class="form-notch-trailing"></div></div>
-                                        </div>
+										<div class="form-outline form-white mb-4">
+											<input asp-for="FirstName" type="firstname" id="typeFirstNameX" placeholder="Имя" class="form-control form-control-lg">
+											<span asp-validation-for="FirstName" class="text-danger"></span>
+											<div class="form-notch"><div class="form-notch-leading" style="width: 9px;"></div><div class="form-notch-middle" style="width: 64px;"></div><div class="form-notch-trailing"></div></div>
+										</div>
 
-                                        <div class="form-outline form-white mb-4">
-                                            <input name="LastName" type="lastname" id="typeLastNameX" placeholder="Фамилия" class="form-control form-control-lg">
-                                            <div class="form-notch"><div class="form-notch-leading" style="width: 9px;"></div><div class="form-notch-middle" style="width: 64px;"></div><div class="form-notch-trailing"></div></div>
-                                        </div>
+										<div class="form-outline form-white mb-4">
+											<input asp-for="LastName" type="lastname" id="typeLastNameX" placeholder="Фамилия" class="form-control form-control-lg">
+											<span asp-validation-for="LastName" class="text-danger"></span>
+											<div class="form-notch"><div class="form-notch-leading" style="width: 9px;"></div><div class="form-notch-middle" style="width: 64px;"></div><div class="form-notch-trailing"></div></div>
+										</div>
 
-                                        <div class="form-outline form-white mb-4">
-                                            <input name="Address" type="address" id="typeAddressX" placeholder="Адрес" class="form-control form-control-lg">
-                                            <div class="form-notch"><div class="form-notch-leading" style="width: 9px;"></div><div class="form-notch-middle" style="width: 64px;"></div><div class="form-notch-trailing"></div></div>
-                                        </div>
+										<div class="form-outline form-white mb-4">
+											<input asp-for="Address" type="address" id="typeAddressX" placeholder="Адрес" class="form-control form-control-lg">
+											<span asp-validation-for="Address" class="text-danger"></span>
+											<div class="form-notch"><div class="form-notch-leading" style="width: 9px;"></div><div class="form-notch-middle" style="width: 64px;"></div><div class="form-notch-trailing"></div></div>
+										</div>
 
-                                        <button class="btn btn gradient-custom btn-lg px-5 button-custom" type="submit">Зарегестрироваться</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </div>
+										<button class="btn btn gradient-custom btn-lg px-5 button-custom" type="submit">Зарегестрироваться</button>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
 </section>
+
+@section Scripts
+{
+	@{
+		<partial name="_ValidationScriptsPartial" />
+	}
+}
