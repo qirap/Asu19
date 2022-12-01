@@ -387,6 +387,13 @@ namespace Asu19.Areas.Account.Controllers
 
             if (car != null)
             {
+                UserCar? userCar = db.UserCar.FirstOrDefault(uc => uc.CarId == car.Id && uc.UserId == Convert.ToInt32(User.Claims.FirstOrDefault().Value));
+
+                if (userCar != null)
+                {
+                    return new RedirectResult("/addcar");
+                }
+
                 db.UserCar.Add(new UserCar
                 {
                     Id = db.UserCar.Max(uc => uc.Id) + 1,
@@ -422,15 +429,22 @@ namespace Asu19.Areas.Account.Controllers
 
         [HttpPost]
         [Route("/delcar")]
-        public async Task DelCar([FromBody] UserCarInfo userCarInfo)
+        public async Task<IActionResult> DelCar([FromBody] UserCarInfo userCarInfo)
         {
             Cars? car = db.Cars.FirstOrDefault(c => c.Brand == userCarInfo.Brand && c.Model == userCarInfo.Model);
 
             UserCar? userCar = db.UserCar.FirstOrDefault(uc => uc.UserId == Convert.ToInt32(User.Claims.ElementAt(0).Value) && uc.CarId == car.Id);
 
+            Requests? request = db.Requests.FirstOrDefault(r => r.CarId == car.Id && r.UserId == userCar.UserId);
+
+            if (request != null)
+                return new BadRequestResult();
+
             db.UserCar.Remove(userCar);
 
             await db.SaveChangesAsync();
+
+            return new OkResult();
         }
 
         [HttpGet]

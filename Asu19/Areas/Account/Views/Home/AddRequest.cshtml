@@ -28,7 +28,7 @@
 
 												@if (item.Status == "Выполнено")
 												{
-													<div class="text-success">@item.Status</div>
+													<div class="text-success">@item.Status (<a target="_blank" href="/requests/cheque/@(item.Id)">Чек</a>)</div>
 												}
 											</li>
 										}
