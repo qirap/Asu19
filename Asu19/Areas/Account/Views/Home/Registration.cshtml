@@ -17,8 +17,9 @@
 									<h2 class="fw-bold mb-2 text-uppercase">Регистрация</h2>
 									<p class="text-white-50 mb-5">Пожалуйста введите необходимые данные!</p>
 									<form method="post" asp-area="Account" asp-controller="Home" asp-action="Registration">
+										<div asp-validation-summary="All" class="text-danger"></div>
 										<div class="form-outline form-white mb-4">
-											<input asp-for="Login" type="login" id="typeLoginX" placeholder="Логин" class="form-control form-control-lg">
+											<input id="login" asp-for="Login" type="login" placeholder="Логин" class="form-control form-control-lg">
 											<span asp-validation-for="Login" class="text-danger"></span>
 											<div class="form-notch"><div class="form-notch-leading" style="width: 9px;"></div><div class="form-notch-middle" style="width: 40px;"></div><div class="form-notch-trailing"></div></div>
 										</div>

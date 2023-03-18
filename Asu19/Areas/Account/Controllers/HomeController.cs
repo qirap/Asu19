@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
@@ -80,16 +81,17 @@ namespace Asu19.Areas.Account.Controllers
         [Route("/login")]
         public async Task<IActionResult> Login([FromForm] UserLogInfo userLogInfo)
         {
-
             AddValidationRule(userLogInfo);
 
-            if (!ModelState.IsValid)
-                return new HtmlResult(AuthValidation(userLogInfo), "/login");
+            if (!UserExists(userLogInfo.Login))
+            {
+				ModelState.AddModelError("", $"Пользователь не найден");
+			}
+			
+			if (!ModelState.IsValid)
+				return View(userLogInfo);
 
-            Users? user = db.Users.FirstOrDefault(u => u.Login == userLogInfo.Login && u.Password == userLogInfo.Password);
-
-            if (user == null)
-                return new UnauthorizedResult();
+			Users? user = db.Users.FirstOrDefault(u => u.Login == userLogInfo.Login && u.Password == userLogInfo.Password);
 
             var claims = new List<Claim>
             {
@@ -121,8 +123,13 @@ namespace Asu19.Areas.Account.Controllers
         {
             AddValidationRule(userRegInfo);
 
-            if (!ModelState.IsValid)
-                return new HtmlResult(AuthValidation(userRegInfo), "/registration");
+			if (UserExists(userRegInfo.Login))
+			{
+				ModelState.AddModelError("", $"Логин занят");
+			}
+
+			if (!ModelState.IsValid)
+                return View(userRegInfo);
 
             Users? user = db.Users.FirstOrDefault(u => u.Login == userRegInfo.Login);
 
@@ -159,7 +166,16 @@ namespace Asu19.Areas.Account.Controllers
             return new RedirectResult("/");
         }
 
-        [Authorize(Roles = "admin")]
+		[HttpGet]
+		[Route("/checklogin")]
+		public IActionResult CheckLogin()
+		{
+			if (User.Identity.IsAuthenticated)
+				return new RedirectResult("/profile");
+			return View();
+		}
+
+		[Authorize(Roles = "admin")]
         [Route("/requests")]
         public async Task<IActionResult> Requests(int? id)
         {
@@ -539,5 +555,10 @@ namespace Asu19.Areas.Account.Controllers
             }
             return errorMessages;
         }
+
+        public bool UserExists(string login)
+        {
+			return db.Users.FirstOrDefault(u => u.Login == login) != null;
+		}
     }
 }
